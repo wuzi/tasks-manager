@@ -4,6 +4,11 @@
   "description": "A sample project of a Task Manager API",
   "author": "Lucas Godoy (Wuzi)",
   "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "serve": "node dist/index.js",
+    "start": "npm run serve"
+  },
   "dependencies": {
     "dotenv": "^8.2.0",
     "express": "^4.17.1"
