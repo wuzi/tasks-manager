@@ -1,0 +1,21 @@
+# Coverage reports
+coverage
+
+# environment variables, never commit this file
+.env
+
+# Dependency directory
+node_modules
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Ignore built ts files
+dist/**/*
+
+# Ignore yarn.lock
+yarn.lock
+
+# Log files
+logs/**/*

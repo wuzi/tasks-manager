@@ -1,0 +1,7 @@
+{
+  "name": "tasks-manager",
+  "version": "0.1.0",
+  "description": "A sample project of a Task Manager API",
+  "author": "Lucas Godoy (Wuzi)",
+  "license": "MIT"
+}
