@@ -3,5 +3,11 @@
   "version": "0.1.0",
   "description": "A sample project of a Task Manager API",
   "author": "Lucas Godoy (Wuzi)",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.6"
+  }
 }
