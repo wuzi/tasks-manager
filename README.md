@@ -13,6 +13,17 @@ This repository contains a sample project of a Task Manager API.
 | Jest                 | Testing library for JavaScript                                                |
 | TypeScript           | JavaScript compiler/type checker that boosts JavaScript productivity          |
 
+## Running
+List of all the available scripts:
+
+| NPM Script           | Description                                                                                       |
+| -------------------- | ------------------------------------------------------------------------------------------------- |
+| `serve`              | Runs node on `dist/index.js` which is the app entry point                                         |
+| `start`              | Does the same as 'npm run serve'. Can be invoked without the `run` param                          |
+| `watch`              | Runs app with nodemon so the process restarts if it crashes or a file changes                     |
+| `build`              | Compiles all source `.ts` files to `.js` files in the `dist` folder                               |
+| `watch-build`        | Same as `build` but continuously watches `.ts` files and re-compiles when needed                  |
+
 ## Versioning
 
 We use [SemVer](http://semver.org/) for versioning.
