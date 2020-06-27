@@ -1,9 +1,22 @@
 # Tasks Manager
-
 This repository contains a sample project of a Task Manager API.
 
-## Technologies
+## Getting started
+```bash
+# install dependencies
+npm install
 
+# create .env file from example (don't forget to edit it)
+cp .env.example .env
+
+# build project
+npm run build
+
+# run project
+npm start
+```
+
+## Technologies
 | Name                 | Description                                                                   |
 | -------------------- | ----------------------------------------------------------------------------- |
 | NodeJS               | JavaScript runtime environment that executes JS code outside a web browser    |
@@ -25,5 +38,4 @@ List of all the available scripts:
 | `watch-build`        | Same as `build` but continuously watches `.ts` files and re-compiles when needed                  |
 
 ## Versioning
-
 We use [SemVer](http://semver.org/) for versioning.
