@@ -9,4 +9,12 @@ export default class TaskService {
   static findAll(options?: FindManyOptions<Task>): Promise<[Task[], number]> {
     return getConnection().getRepository(Task).findAndCount(options);
   }
+
+  /**
+   * Find one task by id
+   * @param id The id of the task
+   */
+  static findById(id: number): Promise<Task | undefined> {
+    return getConnection().getRepository(Task).findOne(id);
+  }
 }

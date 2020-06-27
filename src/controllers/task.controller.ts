@@ -26,4 +26,18 @@ export default class TaskController {
       return res.status(503).json({ message: 'Could not get the tasks' });
     }
   }
+
+  static async findById(req: Request, res: Response) {
+    const { id } = req.params;
+    try {
+      const task = await TaskService.findById(parseInt(id, 10));
+      if (!task) {
+        return res.status(404).json({ message: 'Task not found' });
+      }
+      return res.json(task);
+    } catch (err) {
+      logger('task', err.message, 'error');
+      return res.status(503).json({ message: 'Could not get the task' });
+    }
+  }
 }

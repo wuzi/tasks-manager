@@ -9,4 +9,8 @@ router
   .route('/')
   .get(TaskValidator.findAll, TaskController.findAll);
 
+router
+  .route('/:id')
+  .get(TaskValidator.findById, TaskController.findById);
+
 export default router;

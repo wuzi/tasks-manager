@@ -22,4 +22,20 @@ export default class TaskValidator {
       return res.status(422).json(err);
     }
   }
+
+  public static async findById(req: Request, res: Response, next: Function): Promise<Response> {
+    const schema = Joi.object({
+      id: Joi.number().integer(),
+    }).required();
+
+    try {
+      req.params = await schema.validateAsync(req.params, {
+        abortEarly: false,
+        stripUnknown: true,
+      });
+      return next();
+    } catch (err) {
+      return res.status(422).json(err);
+    }
+  }
 }
