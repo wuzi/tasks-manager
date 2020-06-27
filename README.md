@@ -39,6 +39,20 @@ List of all the available scripts:
 | `test`               | Runs tests using Jest test runner                                                                 |
 | `t`                  | Same as `npm run test`. Can be invoked without the run param                                      |
 
+## Docker
+To run with docker, follow the commands:
+
+```bash
+# first create the .env file
+cp .env.example .env
+
+# edit the values with the ones in docker-compose.yml
+nano .env
+
+# then start docker-compose
+docker-compose up
+```
+
 ## Documentation
 For detailed documentation of the API, run the server and go to `/docs` page.
 
