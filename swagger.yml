@@ -72,8 +72,177 @@ paths:
           description: Missing required parameters or invalid properties type
         503:
           description: Service or database unavailable
+    post:
+      tags:
+        - task
+      summary: Create a new task
+      description: Return the new created task
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: payload
+          description: Data of the task that will be created
+          required: true
+          schema:
+            $ref: "#/definitions/CreateTaskDto"
+      responses:
+        200:
+          description: Return the new created the task
+          schema:
+            $ref: "#/definitions/Task"
+        422:
+          description: Missing required parameters or invalid properties type
+        503:
+          description: Service or database unavailable
+  /tasks/{id}:
+    get:
+      tags:
+        - task
+      summary: Get a single task
+      description: Return a single task by id
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          type: number
+          required: true
+          description: The id of the task
+      responses:
+        200:
+          description: Return the task
+          schema:
+            $ref: "#/definitions/Task"
+        422:
+          description: Missing required parameters or invalid properties type
+        503:
+          description: Service or database unavailable
+    put:
+      tags:
+        - task
+      summary: Update a task
+      description: Update a task by id
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          type: number
+          required: true
+          description: The id of the task
+        - in: body
+          name: payload
+          description: Data of the task that will be updated
+          required: true
+          schema:
+            $ref: "#/definitions/UpdateTaskDto"
+      responses:
+        200:
+          description: Return the updated task
+          schema:
+            $ref: "#/definitions/Task"
+        422:
+          description: Missing required parameters or invalid properties type
+        503:
+          description: Service or database unavailable
+    patch:
+      tags:
+        - task
+      summary: Update a task partially
+      description: Update a task partially by id
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          type: number
+          required: true
+          description: The id of the task
+        - in: body
+          name: payload
+          description: Data of the task that will be updated
+          required: true
+          schema:
+            $ref: "#/definitions/UpdateTaskPartiallyDto"
+      responses:
+        200:
+          description: Return the updated task
+          schema:
+            $ref: "#/definitions/Task"
+        422:
+          description: Missing required parameters or invalid properties type
+        503:
+          description: Service or database unavailable
 definitions:
   Task:
+    type: object
+    properties:
+      id:
+        type: number
+        example: 1
+        description: The unique id of the task
+      title:
+        type: string
+        example: Do the laundry
+        description: The title of the task
+      description:
+        type: string
+        example: Do not forget to get the laundry done before tomorrow
+        description: The description of the task
+      status:
+        type: string
+        example: pending
+        enum: ["pending", "in progress", "done"]
+        description: The status of the task
+  CreateTaskDto:
+    type: object
+    properties:
+      title:
+        type: string
+        example: Do the laundry
+        description: The title of the task
+      description:
+        type: string
+        example: Do not forget to get the laundry done before tomorrow
+        description: The description of the task
+      status:
+        type: string
+        example: pending
+        enum: ["pending", "in progress", "done"]
+        description: The status of the task
+    required:
+      - title
+      - description
+  UpdateTaskDto:
+    type: object
+    properties:
+      title:
+        type: string
+        example: Do the laundry
+        description: The title of the task
+      description:
+        type: string
+        example: Do not forget to get the laundry done before tomorrow
+        description: The description of the task
+      status:
+        type: string
+        example: pending
+        enum: ["pending", "in progress", "done"]
+        description: The status of the task
+    required:
+      - title
+      - description
+      - status
+  UpdateTaskPartiallyDto:
     type: object
     properties:
       title:
