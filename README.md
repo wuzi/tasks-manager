@@ -36,6 +36,8 @@ List of all the available scripts:
 | `watch`              | Runs app with nodemon so the process restarts if it crashes or a file changes                     |
 | `build`              | Compiles all source `.ts` files to `.js` files in the `dist` folder                               |
 | `watch-build`        | Same as `build` but continuously watches `.ts` files and re-compiles when needed                  |
+| `test`               | Runs tests using Jest test runner                                                                 |
+| `t`                  | Same as `npm run test`. Can be invoked without the run param                                      |
 
 ## Documentation
 For detailed documentation of the API, run the server and go to `/docs` page.
