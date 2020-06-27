@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Like } from 'typeorm';
-import TaskService from '../services/task';
+import TaskService from '../services/task.service';
 
 export default class TaskController {
   static async findAll(req: Request, res: Response) {

@@ -1,5 +1,5 @@
 import { getConnection, FindManyOptions } from 'typeorm';
-import Task from '../models/task';
+import Task from '../models/task.model';
 
 export default class TaskService {
   /**
