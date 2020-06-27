@@ -1,0 +1,86 @@
+swagger: "2.0"
+info:
+  description: This is the official documentation for the tasks manager API.
+  version: 0.1.0
+  title: Tasks Manager API
+basePath: /v1
+host: localhost
+tags:
+  - name: task
+    description: Operations about tasks
+schemes:
+  - https
+  - http
+paths:
+  /tasks:
+    get:
+      tags:
+        - task
+      summary: Show a list of all tasks
+      description: Return a paginated array with tasks
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: page
+          type: integer
+          minimum: 1
+          description: Page of the results
+        - in: query
+          name: limit
+          type: integer
+          minimum: 1
+          maximum: 100
+          description: Number of results to show per page
+        - in: query
+          name: title
+          type: string
+          description: Filter results by the title
+        - in: query
+          name: description
+          type: string
+          description: Filter results by the description
+        - in: query
+          name: status
+          type: string
+          enum: ["pending", "in progress", "done"]
+          description: Filter results by status
+        - in: query
+          name: orderById
+          type: string
+          enum: ["ASC", "DESC"]
+          description: Order results by id
+      responses:
+        200:
+          description: Return an object with an array of tasks and the total results
+          schema:
+            type: object
+            properties:
+              tasks:
+                type: array
+                items:
+                  $ref: "#/definitions/Task"
+              total:
+                type: integer
+                description: Total of records in database (using the current filters)
+        422:
+          description: Missing required parameters or invalid properties type
+definitions:
+  Task:
+    type: object
+    properties:
+      title:
+        type: string
+        example: Do the laundry
+        description: The title of the task
+      description:
+        type: string
+        example: Do not forget to get the laundry done before tomorrow
+        description: The description of the task
+      status:
+        type: string
+        example: pending
+        enum: ["pending", "in progress", "done"]
+        description: The status of the task
