@@ -37,5 +37,10 @@ List of all the available scripts:
 | `build`              | Compiles all source `.ts` files to `.js` files in the `dist` folder                               |
 | `watch-build`        | Same as `build` but continuously watches `.ts` files and re-compiles when needed                  |
 
+## Documentation
+For detailed documentation of the API, run the server and go to `/docs` page.
+
+You can also check the [swagger.yml](https://github.com/Wuzi/tasks-manager/blob/master/swagger.yml) directly.
+
 ## Versioning
 We use [SemVer](http://semver.org/) for versioning.
