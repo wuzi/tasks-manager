@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Like } from 'typeorm';
 import TaskService from '../services/task.service';
+import logger from '../utils/logger';
 
 export default class TaskController {
   static async findAll(req: Request, res: Response) {
@@ -21,6 +22,7 @@ export default class TaskController {
       const totalPages = Math.ceil(total / take);
       return res.json({ tasks, total, totalPages });
     } catch (err) {
+      logger('task', err.message, 'error');
       return res.status(503).json({ message: 'Could not get the tasks' });
     }
   }
