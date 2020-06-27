@@ -17,6 +17,7 @@ export default class TaskController {
       take, skip, where, order,
     });
 
-    return res.json({ tasks, total });
+    const totalPages = Math.ceil(total / take);
+    return res.json({ tasks, total, totalPages });
   }
 }

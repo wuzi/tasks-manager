@@ -65,6 +65,9 @@ paths:
               total:
                 type: integer
                 description: Total of records in database (using the current filters)
+              totalPages:
+                type: integer
+                description: Total number of pages
         422:
           description: Missing required parameters or invalid properties type
 definitions:
