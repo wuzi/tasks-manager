@@ -1,7 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class Task {
+export default class Task {
   @PrimaryGeneratedColumn()
   public id!: number;
 
@@ -11,6 +11,6 @@ export class Task {
   @Column()
   public description!: string;
 
-  @Column({ type: "varchar", length: 32 })
-  public status!: "pending" | "in progress" | "done";
+  @Column({ type: 'varchar', length: 32 })
+  public status!: 'pending' | 'in progress' | 'done';
 }

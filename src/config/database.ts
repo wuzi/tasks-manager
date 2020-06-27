@@ -6,8 +6,8 @@
   |--------------------------------------------------------------------------
 */
 export default {
-  name: "default",
-  type: process.env.DATABASE_DRIVER as "mysql",
+  name: 'default',
+  type: process.env.DATABASE_DRIVER as 'mysql',
   host: process.env.DATABASE_HOST as string,
   port: parseInt(process.env.DATABASE_PORT as string, 10),
   username: process.env.DATABASE_USERNAME as string,
