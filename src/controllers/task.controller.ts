@@ -13,11 +13,15 @@ export default class TaskController {
     if (req.query.status) where.status = Like(`%${req.query.status}%`);
     if (req.query.description) where.description = Like(`%${req.query.description}%`);
 
-    const [tasks, total] = await TaskService.findAll({
-      take, skip, where, order,
-    });
+    try {
+      const [tasks, total] = await TaskService.findAll({
+        take, skip, where, order,
+      });
 
-    const totalPages = Math.ceil(total / take);
-    return res.json({ tasks, total, totalPages });
+      const totalPages = Math.ceil(total / take);
+      return res.json({ tasks, total, totalPages });
+    } catch (err) {
+      return res.status(503).json({ message: 'Could not get the tasks' });
+    }
   }
 }

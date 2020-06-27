@@ -70,6 +70,8 @@ paths:
                 description: Total number of pages
         422:
           description: Missing required parameters or invalid properties type
+        503:
+          description: Service or database unavailable
 definitions:
   Task:
     type: object
