@@ -38,4 +38,22 @@ export default class TaskValidator {
       return res.status(422).json(err);
     }
   }
+
+  public static async store(req: Request, res: Response, next: Function): Promise<Response> {
+    const schema = Joi.object({
+      title: Joi.string().required(),
+      status: Joi.string().valid('pending', 'in progress', 'done'),
+      description: Joi.string().required(),
+    }).required();
+
+    try {
+      req.body = await schema.validateAsync(req.body, {
+        abortEarly: false,
+        stripUnknown: true,
+      });
+      return next();
+    } catch (err) {
+      return res.status(422).json(err);
+    }
+  }
 }

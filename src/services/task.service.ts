@@ -17,4 +17,13 @@ export default class TaskService {
   static findById(id: number): Promise<Task | undefined> {
     return getConnection().getRepository(Task).findOne(id);
   }
+
+  /**
+   * Saves a task entity in the database.
+   * If it does not exist then inserts, otherwise updates.
+   * @param task The task to be saved
+   */
+  static save(task: Task): Promise<Task> {
+    return getConnection().getRepository(Task).save(task);
+  }
 }
