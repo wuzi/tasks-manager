@@ -182,6 +182,8 @@ describe('TaskController', () => {
       (TaskService as jest.Mocked<typeof TaskService>).save.mockResolvedValue(task);
       await TaskController.update({ params, body } as any, res as any);
 
+      expect(task.title).toStrictEqual('test');
+      expect(task.description).toStrictEqual('test');
       expect(TaskService.save).toBeCalledWith(task);
       expect(res.json).toBeCalledWith(task);
     });
@@ -204,6 +206,68 @@ describe('TaskController', () => {
 
       (TaskService as jest.Mocked<typeof TaskService>).findById.mockRejectedValue(new Error());
       await TaskController.update({ params, body } as any, res as any);
+
+      expect(TaskService.save).not.toBeCalled();
+      expect(res.status).toBeCalledWith(503);
+      expect(res.json).toBeCalledWith({ message: expect.anything() });
+    });
+  });
+
+  describe('updatePartially', () => {
+    it('should update a task partially', async () => {
+      const params = { id: '1' };
+      const body = { title: 'test', description: 'test', status: 'done' };
+      const task = new Task();
+
+      (TaskService as jest.Mocked<typeof TaskService>).findById.mockResolvedValue(task);
+      (TaskService as jest.Mocked<typeof TaskService>).save.mockResolvedValue(task);
+      await TaskController.updatePartially({ params, body } as any, res as any);
+
+      expect(task.title).toStrictEqual('test');
+      expect(task.description).toStrictEqual('test');
+      expect(task.status).toStrictEqual('done');
+      expect(TaskService.save).toBeCalledWith(task);
+      expect(res.json).toBeCalledWith(task);
+    });
+
+    it('should not update property if not specified', async () => {
+      const params = { id: '1' };
+      const body = {};
+
+      const task = new Task();
+      task.title = 'test';
+      task.description = 'test';
+      task.status = 'done';
+
+      (TaskService as jest.Mocked<typeof TaskService>).findById.mockResolvedValue(task);
+      (TaskService as jest.Mocked<typeof TaskService>).save.mockResolvedValue(task);
+      await TaskController.updatePartially({ params, body } as any, res as any);
+
+      expect(task.title).toStrictEqual('test');
+      expect(task.description).toStrictEqual('test');
+      expect(task.status).toStrictEqual('done');
+      expect(TaskService.save).toBeCalledWith(task);
+      expect(res.json).toBeCalledWith(task);
+    });
+
+    it('should return 404 if task is not found', async () => {
+      const params = { id: '1' };
+      const body = { title: 'test', description: 'test' };
+
+      (TaskService as jest.Mocked<typeof TaskService>).findById.mockResolvedValue(undefined);
+      await TaskController.updatePartially({ params, body } as any, res as any);
+
+      expect(TaskService.save).not.toBeCalled();
+      expect(res.status).toBeCalledWith(404);
+      expect(res.json).toBeCalledWith({ message: expect.anything() });
+    });
+
+    it('should return 503 if query fails', async () => {
+      const params = { id: '1' };
+      const body = { title: 'test', description: 'test' };
+
+      (TaskService as jest.Mocked<typeof TaskService>).findById.mockRejectedValue(new Error());
+      await TaskController.updatePartially({ params, body } as any, res as any);
 
       expect(TaskService.save).not.toBeCalled();
       expect(res.status).toBeCalledWith(503);
