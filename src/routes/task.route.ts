@@ -17,4 +17,8 @@ router
   .route('/')
   .post(TaskValidator.store, TaskController.store);
 
+router
+  .route('/:id')
+  .put(TaskValidator.update, TaskController.update);
+
 export default router;

@@ -57,4 +57,25 @@ export default class TaskController {
 
     return res.status(201).json(task);
   }
+
+  static async update(req: Request, res: Response) {
+    const { id } = req.params;
+    const { title, description, status } = req.body;
+    try {
+      const task = await TaskService.findById(parseInt(id, 10));
+      if (!task) {
+        return res.status(404).json({ message: 'Task not found' });
+      }
+
+      task.title = title;
+      task.description = description;
+      task.status = status;
+      await TaskService.save(task);
+
+      return res.json(task);
+    } catch (err) {
+      logger('task', err.message, 'error');
+      return res.status(503).json({ message: 'Could not update the task' });
+    }
+  }
 }
