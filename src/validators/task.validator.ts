@@ -10,10 +10,13 @@ export default class TaskValidator {
       title: Joi.string(),
       status: Joi.string().valid('pending', 'in progress', 'done'),
       description: Joi.string(),
-    }).unknown(true).required();
+    }).required();
 
     try {
-      await schema.validateAsync(req.query, { abortEarly: false });
+      req.query = await schema.validateAsync(req.query, {
+        abortEarly: false,
+        stripUnknown: true,
+      });
       return next();
     } catch (err) {
       return res.status(422).json(err);
