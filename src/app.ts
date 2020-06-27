@@ -1,7 +1,7 @@
+import 'dotenv/config';
+import 'reflect-metadata';
 import express from "express";
-import dotenv from "dotenv";
 
-dotenv.config();
 const app = express();
 
 app.set("port", process.env.PORT || 3000);
