@@ -83,4 +83,33 @@ export default class TaskValidator {
       return res.status(422).json(err);
     }
   }
+
+  public static async updatePartially(
+    req: Request, res: Response, next: Function,
+  ): Promise<Response> {
+    const paramsSchema = Joi.object({
+      id: Joi.number().integer(),
+    }).required();
+
+    const bodySchema = Joi.object({
+      title: Joi.string(),
+      status: Joi.string().valid('pending', 'in progress', 'done'),
+      description: Joi.string(),
+    }).required();
+
+    try {
+      req.params = await paramsSchema.validateAsync(req.params, {
+        abortEarly: false,
+        stripUnknown: true,
+      });
+
+      req.body = await bodySchema.validateAsync(req.body, {
+        abortEarly: false,
+        stripUnknown: true,
+      });
+      return next();
+    } catch (err) {
+      return res.status(422).json(err);
+    }
+  }
 }

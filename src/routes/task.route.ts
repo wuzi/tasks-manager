@@ -21,4 +21,8 @@ router
   .route('/:id')
   .put(TaskValidator.update, TaskController.update);
 
+router
+  .route('/:id')
+  .patch(TaskValidator.updatePartially, TaskController.updatePartially);
+
 export default router;
