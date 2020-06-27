@@ -157,7 +157,7 @@ describe('TaskController', () => {
 
       expect(TaskService.save).toBeCalled();
       expect(res.status).toBeCalledWith(201);
-      expect(res.json).toBeCalled();
+      expect(res.json).toBeCalledWith({ title: 'test', description: 'test', status: 'pending' });
     });
 
     it('should return 503 if query fails', async () => {
