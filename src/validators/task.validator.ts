@@ -8,6 +8,7 @@ export default class TaskValidator {
       limit: Joi.number().integer().min(1).max(100),
       orderById: Joi.string().valid('ASC', 'DESC'),
       title: Joi.string(),
+      status: Joi.string().valid('pending', 'in progress', 'done'),
       description: Joi.string(),
     }).unknown(true).required();
 

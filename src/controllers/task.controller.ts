@@ -10,6 +10,7 @@ export default class TaskController {
 
     const where: any = {};
     if (req.query.title) where.title = Like(`%${req.query.title}%`);
+    if (req.query.status) where.status = Like(`%${req.query.status}%`);
     if (req.query.description) where.description = Like(`%${req.query.description}%`);
 
     const [tasks, total] = await TaskService.findAll({
