@@ -142,4 +142,29 @@ describe('TaskController', () => {
       expect(res.json).toBeCalledWith({ message: expect.anything() });
     });
   });
+
+  describe('store', () => {
+    it('should create a new task', async () => {
+      const body = { title: 'test', description: 'test' };
+      const task = new Task();
+
+      (TaskService as jest.Mocked<typeof TaskService>).save.mockResolvedValue(task);
+      await TaskController.store({ body } as any, res as any);
+
+      expect(TaskService.save).toBeCalled();
+      expect(res.status).toBeCalledWith(201);
+      expect(res.json).toBeCalled();
+    });
+
+    it('should return 503 if query fails', async () => {
+      const body = { title: 'test', description: 'test' };
+
+      (TaskService as jest.Mocked<typeof TaskService>).save.mockRejectedValue(new Error());
+      await TaskController.store({ body } as any, res as any);
+
+      expect(TaskService.save).toBeCalled();
+      expect(res.status).toBeCalledWith(503);
+      expect(res.json).toBeCalledWith({ message: expect.anything() });
+    });
+  });
 });
