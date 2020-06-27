@@ -6,7 +6,7 @@ export default class TaskController {
   static async findAll(req: Request, res: Response) {
     const take = req.query.limit ? parseInt(req.query.limit as string, 10) : 20;
     const skip = req.query.page ? take * (parseInt(req.query.page as string, 10) - 1) : 0;
-    const order = { id: req.query.orderById as 'ASC' | 'DESC' };
+    const order = { id: req.query.orderById as 'ASC' | 'DESC' | undefined };
 
     const where: any = {};
     if (req.query.title) where.title = Like(`%${req.query.title}%`);
