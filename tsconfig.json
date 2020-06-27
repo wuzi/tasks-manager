@@ -10,13 +10,7 @@
     "noImplicitAny": true,
     "moduleResolution": "node",
     "sourceMap": true,
-    "outDir": "dist",
-    "paths": {
-      "*": [
-        "node_modules/*",
-        "src/types/*"
-      ]
-    }
+    "outDir": "dist"
   },
   "include": [
     "src/**/*"
