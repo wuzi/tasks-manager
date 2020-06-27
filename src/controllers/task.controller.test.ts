@@ -107,4 +107,39 @@ describe('TaskController', () => {
       expect(res.json).toBeCalledWith({ message: expect.anything() });
     });
   });
+
+  describe('findById', () => {
+    it('should return a single task by id', async () => {
+      const params = { id: '1' };
+      const task = { title: 'test' };
+
+      (TaskService as jest.Mocked<typeof TaskService>).findById.mockResolvedValue(task as any);
+      await TaskController.findById({ params } as any, res as any);
+
+      expect(TaskService.findById).toBeCalledWith(parseInt(params.id, 10));
+      expect(res.json).toBeCalledWith(task);
+    });
+
+    it('should return 404 if task is not found', async () => {
+      const params = { id: '1' };
+
+      (TaskService as jest.Mocked<typeof TaskService>).findById.mockResolvedValue(undefined);
+      await TaskController.findById({ params } as any, res as any);
+
+      expect(TaskService.findById).toBeCalledWith(parseInt(params.id, 10));
+      expect(res.status).toBeCalledWith(404);
+      expect(res.json).toBeCalledWith({ message: expect.anything() });
+    });
+
+    it('should return 503 if query fails', async () => {
+      const params = { id: '1' };
+
+      (TaskService as jest.Mocked<typeof TaskService>).findById.mockRejectedValue(new Error());
+      await TaskController.findById({ params } as any, res as any);
+
+      expect(TaskService.findById).toBeCalledWith(parseInt(params.id, 10));
+      expect(res.status).toBeCalledWith(503);
+      expect(res.json).toBeCalledWith({ message: expect.anything() });
+    });
+  });
 });
