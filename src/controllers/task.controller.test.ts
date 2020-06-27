@@ -18,6 +18,10 @@ beforeEach(() => {
   next.mockClear();
   res.json.mockClear();
   res.status.mockClear();
+
+  (TaskService as jest.Mocked<typeof TaskService>).save.mockClear();
+  (TaskService as jest.Mocked<typeof TaskService>).findAll.mockClear();
+  (TaskService as jest.Mocked<typeof TaskService>).findById.mockClear();
 });
 
 describe('TaskController', () => {
@@ -163,6 +167,45 @@ describe('TaskController', () => {
       await TaskController.store({ body } as any, res as any);
 
       expect(TaskService.save).toBeCalled();
+      expect(res.status).toBeCalledWith(503);
+      expect(res.json).toBeCalledWith({ message: expect.anything() });
+    });
+  });
+
+  describe('update', () => {
+    it('should update a task', async () => {
+      const params = { id: '1' };
+      const body = { title: 'test', description: 'test' };
+      const task = new Task();
+
+      (TaskService as jest.Mocked<typeof TaskService>).findById.mockResolvedValue(task);
+      (TaskService as jest.Mocked<typeof TaskService>).save.mockResolvedValue(task);
+      await TaskController.update({ params, body } as any, res as any);
+
+      expect(TaskService.save).toBeCalledWith(task);
+      expect(res.json).toBeCalledWith(task);
+    });
+
+    it('should return 404 if task is not found', async () => {
+      const params = { id: '1' };
+      const body = { title: 'test', description: 'test' };
+
+      (TaskService as jest.Mocked<typeof TaskService>).findById.mockResolvedValue(undefined);
+      await TaskController.update({ params, body } as any, res as any);
+
+      expect(TaskService.save).not.toBeCalled();
+      expect(res.status).toBeCalledWith(404);
+      expect(res.json).toBeCalledWith({ message: expect.anything() });
+    });
+
+    it('should return 503 if query fails', async () => {
+      const params = { id: '1' };
+      const body = { title: 'test', description: 'test' };
+
+      (TaskService as jest.Mocked<typeof TaskService>).findById.mockRejectedValue(new Error());
+      await TaskController.update({ params, body } as any, res as any);
+
+      expect(TaskService.save).not.toBeCalled();
       expect(res.status).toBeCalledWith(503);
       expect(res.json).toBeCalledWith({ message: expect.anything() });
     });
