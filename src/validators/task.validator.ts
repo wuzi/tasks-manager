@@ -1,22 +1,17 @@
-import Joi from '@hapi/joi';
 import { Request, Response } from 'express';
+import CreateTaskDto from '../models/dto/create-task.dto';
+import FindAllTaskDto from '../models/dto/find-all-task.dto';
+import UpdateTaskDto from '../models/dto/update-task-dto';
+import UpdateTaskPartiallyDto from '../models/dto/update-task-partially-dto';
+import validate from '../utils/validate';
 
 export default class TaskValidator {
   public static async findAll(req: Request, res: Response, next: Function): Promise<Response> {
-    const schema = Joi.object({
-      page: Joi.number().integer().min(1),
-      limit: Joi.number().integer().min(1).max(100),
-      orderById: Joi.string().valid('ASC', 'DESC'),
-      title: Joi.string(),
-      status: Joi.string().valid('pending', 'in progress', 'done'),
-      description: Joi.string(),
-    }).required();
-
     try {
-      req.query = await schema.validateAsync(req.query, {
-        abortEarly: false,
-        stripUnknown: true,
-      });
+      const errors = await validate(FindAllTaskDto, req.query);
+      if (errors.length > 0) {
+        return res.status(422).json(errors);
+      }
       return next();
     } catch (err) {
       return res.status(422).json(err);
@@ -24,33 +19,18 @@ export default class TaskValidator {
   }
 
   public static async findById(req: Request, res: Response, next: Function): Promise<Response> {
-    const schema = Joi.object({
-      id: Joi.number().integer(),
-    }).required();
-
-    try {
-      req.params = await schema.validateAsync(req.params, {
-        abortEarly: false,
-        stripUnknown: true,
-      });
-      return next();
-    } catch (err) {
-      return res.status(422).json(err);
+    if (Number.isNaN(parseInt(req.params.id, 10))) {
+      return res.status(404).json({ message: 'Task not found' });
     }
+    return next();
   }
 
   public static async store(req: Request, res: Response, next: Function): Promise<Response> {
-    const schema = Joi.object({
-      title: Joi.string().required(),
-      status: Joi.string().valid('pending', 'in progress', 'done'),
-      description: Joi.string().required(),
-    }).required();
-
     try {
-      req.body = await schema.validateAsync(req.body, {
-        abortEarly: false,
-        stripUnknown: true,
-      });
+      const errors = await validate(CreateTaskDto, req.body);
+      if (errors.length > 0) {
+        return res.status(422).json(errors);
+      }
       return next();
     } catch (err) {
       return res.status(422).json(err);
@@ -58,26 +38,14 @@ export default class TaskValidator {
   }
 
   public static async update(req: Request, res: Response, next: Function): Promise<Response> {
-    const paramsSchema = Joi.object({
-      id: Joi.number().integer(),
-    }).required();
-
-    const bodySchema = Joi.object({
-      title: Joi.string().required(),
-      status: Joi.string().valid('pending', 'in progress', 'done').required(),
-      description: Joi.string().required(),
-    }).required();
-
+    if (Number.isNaN(parseInt(req.params.id, 10))) {
+      return res.status(404).json({ message: 'Task not found' });
+    }
     try {
-      req.params = await paramsSchema.validateAsync(req.params, {
-        abortEarly: false,
-        stripUnknown: true,
-      });
-
-      req.body = await bodySchema.validateAsync(req.body, {
-        abortEarly: false,
-        stripUnknown: true,
-      });
+      const errors = await validate(UpdateTaskDto, req.body);
+      if (errors.length > 0) {
+        return res.status(422).json(errors);
+      }
       return next();
     } catch (err) {
       return res.status(422).json(err);
@@ -87,26 +55,14 @@ export default class TaskValidator {
   public static async updatePartially(
     req: Request, res: Response, next: Function,
   ): Promise<Response> {
-    const paramsSchema = Joi.object({
-      id: Joi.number().integer(),
-    }).required();
-
-    const bodySchema = Joi.object({
-      title: Joi.string(),
-      status: Joi.string().valid('pending', 'in progress', 'done'),
-      description: Joi.string(),
-    }).required();
-
+    if (Number.isNaN(parseInt(req.params.id, 10))) {
+      return res.status(404).json({ message: 'Task not found' });
+    }
     try {
-      req.params = await paramsSchema.validateAsync(req.params, {
-        abortEarly: false,
-        stripUnknown: true,
-      });
-
-      req.body = await bodySchema.validateAsync(req.body, {
-        abortEarly: false,
-        stripUnknown: true,
-      });
+      const errors = await validate(UpdateTaskPartiallyDto, req.body);
+      if (errors.length > 0) {
+        return res.status(422).json(errors);
+      }
       return next();
     } catch (err) {
       return res.status(422).json(err);
