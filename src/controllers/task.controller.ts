@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { Like } from 'typeorm';
-import Task from '../models/task.model';
 import TaskService from '../services/task.service';
 import logger from '../utils/logger';
 
@@ -43,10 +42,8 @@ export default class TaskController {
   }
 
   static async store(req: Request, res: Response) {
-    const task = new Task();
-    task.title = req.body.title;
-    task.description = req.body.description;
-    task.status = req.body.status || 'pending';
+    const { title, description, status } = req.body;
+    const task = TaskService.create({ title, description, status });
 
     try {
       await TaskService.save(task);

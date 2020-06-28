@@ -29,6 +29,41 @@ describe('TaskService', () => {
     });
   });
 
+  describe('create', () => {
+    it('should create a task', async () => {
+      const task = {
+        title: 'test', description: 'test', status: 'done',
+      };
+      (typeorm as jest.Mocked<typeof typeorm>).getConnection = jest.fn().mockReturnValue({
+        getRepository: jest.fn().mockReturnValue({
+          create: jest.fn().mockReturnValue({ id: 1, ...task }),
+        }),
+      });
+      const newTask = TaskService.create(task as Task);
+      expect(newTask).toHaveProperty('id');
+      expect(newTask.title).toStrictEqual('test');
+      expect(newTask.description).toStrictEqual('test');
+      expect(newTask.status).toStrictEqual('done');
+    });
+
+    it('should create a task with pending status if not specified', async () => {
+      const task = {
+        title: 'test', description: 'test',
+      };
+      (typeorm as jest.Mocked<typeof typeorm>).getConnection = jest.fn().mockReturnValue({
+        getRepository: jest.fn().mockReturnValue({
+          create: jest.fn().mockReturnValue({ id: 1, ...task, status: 'pending' }),
+        }),
+      });
+      const newTask = TaskService.create(task);
+      expect(newTask).toHaveProperty('id');
+      expect(newTask).toHaveProperty('title');
+      expect(newTask).toHaveProperty('description');
+      expect(newTask).toHaveProperty('status');
+      expect(newTask.status).toStrictEqual('pending');
+    });
+  });
+
   describe('save', () => {
     it('should save a task', async () => {
       const task = new Task();

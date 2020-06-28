@@ -20,6 +20,7 @@ beforeEach(() => {
   res.status.mockClear();
 
   (TaskService as jest.Mocked<typeof TaskService>).save.mockClear();
+  (TaskService as jest.Mocked<typeof TaskService>).create.mockClear();
   (TaskService as jest.Mocked<typeof TaskService>).findAll.mockClear();
   (TaskService as jest.Mocked<typeof TaskService>).findById.mockClear();
 });
@@ -152,12 +153,16 @@ describe('TaskController', () => {
       const body = { title: 'test', description: 'test' };
       const task = new Task();
 
+      (TaskService as jest.Mocked<typeof TaskService>).create.mockReturnValue({ id: 1, ...body, status: 'pending' });
       (TaskService as jest.Mocked<typeof TaskService>).save.mockResolvedValue(task);
       await TaskController.store({ body } as any, res as any);
 
+      expect(TaskService.create).toBeCalledWith(body);
       expect(TaskService.save).toBeCalled();
       expect(res.status).toBeCalledWith(201);
-      expect(res.json).toBeCalledWith({ title: 'test', description: 'test', status: 'pending' });
+      expect(res.json).toBeCalledWith({
+        id: 1, title: 'test', description: 'test', status: 'pending',
+      });
     });
 
     it('should return 503 if query fails', async () => {

@@ -19,6 +19,17 @@ export default class TaskService {
   }
 
   /**
+   * Creates a new task instance and copies all properties from data into a new task.
+   * Note that it copies only properties that are present in task model.
+   * @param data The data of the task
+   */
+  static create(data: Partial<Task>): Task {
+    const task = { ...data };
+    task.status = data.status || 'pending';
+    return getConnection().getRepository(Task).create(task);
+  }
+
+  /**
    * Saves a task entity in the database.
    * If it does not exist then inserts, otherwise updates.
    * @param task The task to be saved
