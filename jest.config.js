@@ -13,5 +13,6 @@ module.exports = {
   collectCoverageFrom: [
     'src/controllers/**/*.{ts,tsx}',
     'src/services/**/*.{ts,tsx}',
+    'src/validators/**/*.{ts,tsx}',
   ],
 };
