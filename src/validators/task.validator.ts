@@ -14,7 +14,7 @@ export default class TaskValidator {
       }
       return next();
     } catch (err) {
-      return res.status(422).json(err);
+      return res.status(400).json(err);
     }
   }
 
@@ -33,7 +33,7 @@ export default class TaskValidator {
       }
       return next();
     } catch (err) {
-      return res.status(422).json(err);
+      return res.status(400).json(err);
     }
   }
 
@@ -48,7 +48,7 @@ export default class TaskValidator {
       }
       return next();
     } catch (err) {
-      return res.status(422).json(err);
+      return res.status(400).json(err);
     }
   }
 
@@ -65,7 +65,7 @@ export default class TaskValidator {
       }
       return next();
     } catch (err) {
-      return res.status(422).json(err);
+      return res.status(400).json(err);
     }
   }
 }
