@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export default class Task {
@@ -13,4 +15,10 @@ export default class Task {
 
   @Column({ type: 'varchar', length: 32 })
   public status!: 'pending' | 'in progress' | 'done';
+
+  @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
+  public createdAt!: Date;
+
+  @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
+  public updatedAt!: Date;
 }

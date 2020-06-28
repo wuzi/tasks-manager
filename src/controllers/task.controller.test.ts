@@ -152,8 +152,11 @@ describe('TaskController', () => {
     it('should create a new task', async () => {
       const body = { title: 'test', description: 'test' };
       const task = new Task();
+      const now = new Date();
 
-      (TaskService as jest.Mocked<typeof TaskService>).create.mockReturnValue({ id: 1, ...body, status: 'pending' });
+      (TaskService as jest.Mocked<typeof TaskService>).create.mockReturnValue({
+        id: 1, ...body, status: 'pending', createdAt: now, updatedAt: now,
+      });
       (TaskService as jest.Mocked<typeof TaskService>).save.mockResolvedValue(task);
       await TaskController.store({ body } as any, res as any);
 
@@ -161,7 +164,7 @@ describe('TaskController', () => {
       expect(TaskService.save).toBeCalled();
       expect(res.status).toBeCalledWith(201);
       expect(res.json).toBeCalledWith({
-        id: 1, title: 'test', description: 'test', status: 'pending',
+        id: 1, title: 'test', description: 'test', status: 'pending', createdAt: now, updatedAt: now,
       });
     });
 
