@@ -6,12 +6,33 @@ info:
 basePath: /v1
 host: localhost
 tags:
+  - name: health
+    description: Operations about health checks
   - name: task
     description: Operations about tasks
 schemes:
   - https
   - http
 paths:
+  /health:
+    get:
+      tags:
+        - health
+      summary: Get the health of the api
+      description: Get the health status of the api
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: The application is healthy
+          schema:
+            $ref: "#/definitions/HealthResponseDto"
+        503:
+          description: The application is not healthy (database not connected)
+          schema:
+            $ref: "#/definitions/HealthResponseDto"
   /tasks:
     get:
       tags:
@@ -258,3 +279,10 @@ definitions:
         example: pending
         enum: ["pending", "in progress", "done"]
         description: The status of the task
+  HealthResponseDto:
+    type: object
+    properties:
+      message:
+        type: string
+        example: Health status
+        description: The message of the response
