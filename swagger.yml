@@ -224,6 +224,16 @@ definitions:
         example: pending
         enum: ["pending", "in progress", "done"]
         description: The status of the task
+      createdAt:
+        type: string
+        format: datetime
+        example: "2020-06-28T21:16:57.318Z"
+        description: The datetime whe the task was created
+      updatedAt:
+        type: string
+        format: datetime
+        example: "2020-06-28T21:16:57.318Z"
+        description: The datetime whe the task was last updated
   CreateTaskDto:
     type: object
     properties:
