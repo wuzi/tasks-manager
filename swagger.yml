@@ -91,8 +91,12 @@ paths:
                 description: Total number of pages
         422:
           description: Missing required parameters or invalid properties type
+          schema:
+            $ref: "#/definitions/ValidationError"
         503:
           description: Service or database unavailable
+          schema:
+            $ref: "#/definitions/ErrorMessage"
     post:
       tags:
         - task
@@ -116,8 +120,12 @@ paths:
             $ref: "#/definitions/Task"
         422:
           description: Missing required parameters or invalid properties type
+          schema:
+            $ref: "#/definitions/ValidationError"
         503:
           description: Service or database unavailable
+          schema:
+            $ref: "#/definitions/ErrorMessage"
   /tasks/{id}:
     get:
       tags:
@@ -141,8 +149,12 @@ paths:
             $ref: "#/definitions/Task"
         422:
           description: Missing required parameters or invalid properties type
+          schema:
+            $ref: "#/definitions/ValidationError"
         503:
           description: Service or database unavailable
+          schema:
+            $ref: "#/definitions/ErrorMessage"
     put:
       tags:
         - task
@@ -171,8 +183,12 @@ paths:
             $ref: "#/definitions/Task"
         422:
           description: Missing required parameters or invalid properties type
+          schema:
+            $ref: "#/definitions/ValidationError"
         503:
           description: Service or database unavailable
+          schema:
+            $ref: "#/definitions/ErrorMessage"
     patch:
       tags:
         - task
@@ -201,8 +217,12 @@ paths:
             $ref: "#/definitions/Task"
         422:
           description: Missing required parameters or invalid properties type
+          schema:
+            $ref: "#/definitions/ValidationError"
         503:
           description: Service or database unavailable
+          schema:
+            $ref: "#/definitions/ErrorMessage"
 definitions:
   Task:
     type: object
@@ -296,3 +316,34 @@ definitions:
         type: string
         example: Health status
         description: The message of the response
+  ValidationError:
+    type: object
+    properties:
+      target:
+        type: object
+        example: {}
+        description: Object that was validated
+      value:
+        type: object
+        example: john
+        description: Object's property that haven't pass validation
+      property:
+        type: string
+        example: name
+        description: Object's property that haven't pass validation
+      children:
+        type: array
+        example: []
+        description: Contains all nested validation errors of the property
+      constraints:
+        type: object
+        example:
+          { "maxLength": "name must be shorter than or equal to 3 characters" }
+        description: Constraints that failed validation with error messages
+  ErrorMessage:
+    type: object
+    properties:
+      message:
+        type: string
+        example: Database offline
+        description: The message of the error
