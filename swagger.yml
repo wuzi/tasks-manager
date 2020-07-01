@@ -158,6 +158,40 @@ paths:
     put:
       tags:
         - task
+      summary: Replace a task
+      description: Replace a task content by id
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          type: number
+          required: true
+          description: The id of the task
+        - in: body
+          name: payload
+          description: Data of the task that will be updated
+          required: true
+          schema:
+            $ref: "#/definitions/ReplaceTaskDto"
+      responses:
+        200:
+          description: Return the updated task
+          schema:
+            $ref: "#/definitions/Task"
+        422:
+          description: Missing required parameters or invalid properties type
+          schema:
+            $ref: "#/definitions/ValidationError"
+        503:
+          description: Service or database unavailable
+          schema:
+            $ref: "#/definitions/ErrorMessage"
+    patch:
+      tags:
+        - task
       summary: Update a task
       description: Update a task by id
       consumes:
@@ -176,40 +210,6 @@ paths:
           required: true
           schema:
             $ref: "#/definitions/UpdateTaskDto"
-      responses:
-        200:
-          description: Return the updated task
-          schema:
-            $ref: "#/definitions/Task"
-        422:
-          description: Missing required parameters or invalid properties type
-          schema:
-            $ref: "#/definitions/ValidationError"
-        503:
-          description: Service or database unavailable
-          schema:
-            $ref: "#/definitions/ErrorMessage"
-    patch:
-      tags:
-        - task
-      summary: Update a task partially
-      description: Update a task partially by id
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - name: id
-          in: path
-          type: number
-          required: true
-          description: The id of the task
-        - in: body
-          name: payload
-          description: Data of the task that will be updated
-          required: true
-          schema:
-            $ref: "#/definitions/UpdateTaskPartiallyDto"
       responses:
         200:
           description: Return the updated task
@@ -273,7 +273,7 @@ definitions:
     required:
       - title
       - description
-  UpdateTaskDto:
+  ReplaceTaskDto:
     type: object
     properties:
       title:
@@ -293,7 +293,7 @@ definitions:
       - title
       - description
       - status
-  UpdateTaskPartiallyDto:
+  UpdateTaskDto:
     type: object
     properties:
       title:

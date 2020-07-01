@@ -180,7 +180,7 @@ describe('TaskController', () => {
     });
   });
 
-  describe('update', () => {
+  describe('replace', () => {
     it('should update a task', async () => {
       const params = { id: '1' };
       const body = { title: 'test', description: 'test' };
@@ -188,7 +188,7 @@ describe('TaskController', () => {
 
       (TaskService as jest.Mocked<typeof TaskService>).findById.mockResolvedValue(task);
       (TaskService as jest.Mocked<typeof TaskService>).save.mockResolvedValue(task);
-      await TaskController.update({ params, body } as any, res as any);
+      await TaskController.replace({ params, body } as any, res as any);
 
       expect(task.title).toStrictEqual('test');
       expect(task.description).toStrictEqual('test');
@@ -201,7 +201,7 @@ describe('TaskController', () => {
       const body = { title: 'test', description: 'test' };
 
       (TaskService as jest.Mocked<typeof TaskService>).findById.mockResolvedValue(undefined);
-      await TaskController.update({ params, body } as any, res as any);
+      await TaskController.replace({ params, body } as any, res as any);
 
       expect(TaskService.save).not.toBeCalled();
       expect(res.status).toBeCalledWith(404);
@@ -213,7 +213,7 @@ describe('TaskController', () => {
       const body = { title: 'test', description: 'test' };
 
       (TaskService as jest.Mocked<typeof TaskService>).findById.mockRejectedValue(new Error());
-      await TaskController.update({ params, body } as any, res as any);
+      await TaskController.replace({ params, body } as any, res as any);
 
       expect(TaskService.save).not.toBeCalled();
       expect(res.status).toBeCalledWith(503);
@@ -221,15 +221,15 @@ describe('TaskController', () => {
     });
   });
 
-  describe('updatePartially', () => {
-    it('should update a task partially', async () => {
+  describe('update', () => {
+    it('should update a task', async () => {
       const params = { id: '1' };
       const body = { title: 'test', description: 'test', status: 'done' };
       const task = new Task();
 
       (TaskService as jest.Mocked<typeof TaskService>).findById.mockResolvedValue(task);
       (TaskService as jest.Mocked<typeof TaskService>).save.mockResolvedValue(task);
-      await TaskController.updatePartially({ params, body } as any, res as any);
+      await TaskController.update({ params, body } as any, res as any);
 
       expect(task.title).toStrictEqual('test');
       expect(task.description).toStrictEqual('test');
@@ -249,7 +249,7 @@ describe('TaskController', () => {
 
       (TaskService as jest.Mocked<typeof TaskService>).findById.mockResolvedValue(task);
       (TaskService as jest.Mocked<typeof TaskService>).save.mockResolvedValue(task);
-      await TaskController.updatePartially({ params, body } as any, res as any);
+      await TaskController.update({ params, body } as any, res as any);
 
       expect(task.title).toStrictEqual('test');
       expect(task.description).toStrictEqual('test');
@@ -263,7 +263,7 @@ describe('TaskController', () => {
       const body = { title: 'test', description: 'test' };
 
       (TaskService as jest.Mocked<typeof TaskService>).findById.mockResolvedValue(undefined);
-      await TaskController.updatePartially({ params, body } as any, res as any);
+      await TaskController.update({ params, body } as any, res as any);
 
       expect(TaskService.save).not.toBeCalled();
       expect(res.status).toBeCalledWith(404);
@@ -275,7 +275,7 @@ describe('TaskController', () => {
       const body = { title: 'test', description: 'test' };
 
       (TaskService as jest.Mocked<typeof TaskService>).findById.mockRejectedValue(new Error());
-      await TaskController.updatePartially({ params, body } as any, res as any);
+      await TaskController.update({ params, body } as any, res as any);
 
       expect(TaskService.save).not.toBeCalled();
       expect(res.status).toBeCalledWith(503);

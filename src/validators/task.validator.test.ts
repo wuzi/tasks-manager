@@ -2,14 +2,14 @@ import * as validate from '../utils/validate';
 import TaskValidator from './task.validator';
 import FindAllTaskDto from '../models/dto/find-all-task.dto';
 import CreateTaskDto from '../models/dto/create-task.dto';
+import ReplaceTaskDto from '../models/dto/replace-task-dto';
 import UpdateTaskDto from '../models/dto/update-task-dto';
-import UpdateTaskPartiallyDto from '../models/dto/update-task-partially-dto';
 
 jest.mock('express');
 jest.mock('../models/dto/create-task.dto');
 jest.mock('../models/dto/find-all-task.dto');
+jest.mock('../models/dto/replace-task-dto');
 jest.mock('../models/dto/update-task-dto');
-jest.mock('../models/dto/update-task-partially-dto');
 jest.mock('../utils/validate');
 
 const next = jest.fn();
@@ -127,7 +127,7 @@ describe('TaskValidator', () => {
 
     it('should return 404 if id is invalid', async () => {
       const req = { params: { id: 'a' }, body: {} };
-      await TaskValidator.update(req as any, res as any, next);
+      await TaskValidator.replace(req as any, res as any, next);
       expect(next).not.toBeCalled();
       expect(res.status).toBeCalledWith(404);
       expect(res.json).toBeCalled();
@@ -137,9 +137,9 @@ describe('TaskValidator', () => {
       const req = { params: { id: '1' }, body: {} };
 
       (validate as jest.Mocked<typeof validate>).default.mockResolvedValue(new Array(3));
-      await TaskValidator.update(req as any, res as any, next);
+      await TaskValidator.replace(req as any, res as any, next);
 
-      expect(validate.default).toBeCalledWith(UpdateTaskDto, req.body);
+      expect(validate.default).toBeCalledWith(ReplaceTaskDto, req.body);
       expect(next).not.toBeCalled();
       expect(res.status).toBeCalledWith(422);
       expect(res.json).toBeCalled();
@@ -149,29 +149,29 @@ describe('TaskValidator', () => {
       const req = { params: { id: '1' }, body: {} };
 
       (validate as jest.Mocked<typeof validate>).default.mockRejectedValue(new Error());
-      await TaskValidator.update(req as any, res as any, next);
+      await TaskValidator.replace(req as any, res as any, next);
 
-      expect(validate.default).toBeCalledWith(UpdateTaskDto, req.body);
+      expect(validate.default).toBeCalledWith(ReplaceTaskDto, req.body);
       expect(next).not.toBeCalled();
       expect(res.status).toBeCalledWith(400);
       expect(res.json).toBeCalled();
     });
   });
 
-  describe('updatePartially', () => {
+  describe('update', () => {
     it('should call next if validation pass', async () => {
       const req = { params: { id: '1' }, body: {} };
 
       (validate as jest.Mocked<typeof validate>).default.mockResolvedValue([]);
-      await TaskValidator.updatePartially(req as any, res as any, next);
+      await TaskValidator.update(req as any, res as any, next);
 
-      expect(validate.default).toBeCalledWith(UpdateTaskPartiallyDto, req.body);
+      expect(validate.default).toBeCalledWith(UpdateTaskDto, req.body);
       expect(next).toBeCalled();
     });
 
     it('should return 404 if id is invalid', async () => {
       const req = { params: { id: 'a' }, body: {} };
-      await TaskValidator.updatePartially(req as any, res as any, next);
+      await TaskValidator.update(req as any, res as any, next);
       expect(next).not.toBeCalled();
       expect(res.status).toBeCalledWith(404);
       expect(res.json).toBeCalled();
@@ -181,9 +181,9 @@ describe('TaskValidator', () => {
       const req = { params: { id: '1' }, body: {} };
 
       (validate as jest.Mocked<typeof validate>).default.mockResolvedValue(new Array(3));
-      await TaskValidator.updatePartially(req as any, res as any, next);
+      await TaskValidator.update(req as any, res as any, next);
 
-      expect(validate.default).toBeCalledWith(UpdateTaskPartiallyDto, req.body);
+      expect(validate.default).toBeCalledWith(UpdateTaskDto, req.body);
       expect(next).not.toBeCalled();
       expect(res.status).toBeCalledWith(422);
       expect(res.json).toBeCalled();
@@ -193,9 +193,9 @@ describe('TaskValidator', () => {
       const req = { params: { id: '1' }, body: {} };
 
       (validate as jest.Mocked<typeof validate>).default.mockRejectedValue(new Error());
-      await TaskValidator.updatePartially(req as any, res as any, next);
+      await TaskValidator.update(req as any, res as any, next);
 
-      expect(validate.default).toBeCalledWith(UpdateTaskPartiallyDto, req.body);
+      expect(validate.default).toBeCalledWith(UpdateTaskDto, req.body);
       expect(next).not.toBeCalled();
       expect(res.status).toBeCalledWith(400);
       expect(res.json).toBeCalled();

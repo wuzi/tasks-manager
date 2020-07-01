@@ -19,10 +19,10 @@ router
 
 router
   .route('/:id')
-  .put(TaskValidator.update, TaskController.update);
+  .put(TaskValidator.replace, TaskController.replace);
 
 router
   .route('/:id')
-  .patch(TaskValidator.updatePartially, TaskController.updatePartially);
+  .patch(TaskValidator.update, TaskController.update);
 
 export default router;

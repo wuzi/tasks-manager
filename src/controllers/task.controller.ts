@@ -55,7 +55,7 @@ export default class TaskController {
     return res.status(201).json(task);
   }
 
-  static async update(req: Request, res: Response) {
+  static async replace(req: Request, res: Response) {
     const { id } = req.params;
     const { title, description, status } = req.body;
     try {
@@ -76,7 +76,7 @@ export default class TaskController {
     }
   }
 
-  static async updatePartially(req: Request, res: Response) {
+  static async update(req: Request, res: Response) {
     const { id } = req.params;
     const { title, description, status } = req.body;
     try {
