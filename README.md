@@ -22,7 +22,8 @@ npm start
 | NodeJS               | JavaScript runtime environment that executes JS code outside a web browser    |
 | Express              | Web application framework for Node.js                                         |
 | TypeORM              | ORM for TypeScript and JavaScript that supports SQL                           |
-| Lodash               | JS library which provides utility functions for common programming tasks      |
+| Tsyringe             | lightweight dependency injection container for TypeScript                     |
+| Overnight            | TypeScript decorators for methods meant to call Express routes                |
 | Jest                 | Testing library for JavaScript                                                |
 | TypeScript           | JavaScript compiler/type checker that boosts JavaScript productivity          |
 
