@@ -1,13 +1,17 @@
+import 'reflect-metadata';
+import { container } from 'tsyringe';
 import { Like } from 'typeorm';
 import Task from '../models/task.model';
 import TaskService from '../services/task.service';
-import TaskController from './task.controller';
+import { TaskController } from './task.controller';
 
 jest.mock('express');
 jest.mock('../models/task.model');
 jest.mock('../services/task.service');
 jest.mock('../utils/logger');
 
+const taskService = container.resolve(TaskService);
+const taskController = new TaskController(taskService);
 const next = jest.fn();
 const res = {
   status: jest.fn().mockReturnThis(),
@@ -19,10 +23,10 @@ beforeEach(() => {
   res.json.mockClear();
   res.status.mockClear();
 
-  (TaskService as jest.Mocked<typeof TaskService>).save.mockClear();
-  (TaskService as jest.Mocked<typeof TaskService>).create.mockClear();
-  (TaskService as jest.Mocked<typeof TaskService>).findAll.mockClear();
-  (TaskService as jest.Mocked<typeof TaskService>).findById.mockClear();
+  (taskService as jest.Mocked<typeof taskService>).save.mockClear();
+  (taskService as jest.Mocked<typeof taskService>).create.mockClear();
+  (taskService as jest.Mocked<typeof taskService>).findAll.mockClear();
+  (taskService as jest.Mocked<typeof taskService>).findById.mockClear();
 });
 
 describe('TaskController', () => {
@@ -33,10 +37,10 @@ describe('TaskController', () => {
       const tasks: Task[] = [];
       const totalPages = Math.ceil(total / query.limit);
 
-      (TaskService as jest.Mocked<typeof TaskService>).findAll.mockResolvedValue([tasks, total]);
-      await TaskController.findAll({ query } as any, res as any);
+      (taskService as jest.Mocked<typeof taskService>).findAll.mockResolvedValue([tasks, total]);
+      await taskController.findAll({ query } as any, res as any);
 
-      expect(TaskService.findAll).toBeCalledWith({
+      expect(taskService.findAll).toBeCalledWith({
         take: query.limit,
         skip: (query.page - 1) * query.limit,
         where: expect.anything(),
@@ -53,10 +57,10 @@ describe('TaskController', () => {
       const tasks: Task[] = [];
       const totalPages = Math.ceil(total / limit);
 
-      (TaskService as jest.Mocked<typeof TaskService>).findAll.mockResolvedValue([tasks, total]);
-      await TaskController.findAll({ query } as any, res as any);
+      (taskService as jest.Mocked<typeof taskService>).findAll.mockResolvedValue([tasks, total]);
+      await taskController.findAll({ query } as any, res as any);
 
-      expect(TaskService.findAll).toBeCalledWith({
+      expect(taskService.findAll).toBeCalledWith({
         take: limit,
         skip: (page - 1) * limit,
         where: expect.anything(),
@@ -78,10 +82,10 @@ describe('TaskController', () => {
       const tasks: Task[] = [];
       const totalPages = Math.ceil(total / query.limit);
 
-      (TaskService as jest.Mocked<typeof TaskService>).findAll.mockResolvedValue([tasks, total]);
-      await TaskController.findAll({ query } as any, res as any);
+      (taskService as jest.Mocked<typeof taskService>).findAll.mockResolvedValue([tasks, total]);
+      await taskController.findAll({ query } as any, res as any);
 
-      expect(TaskService.findAll).toBeCalledWith({
+      expect(taskService.findAll).toBeCalledWith({
         take: query.limit,
         skip: (query.page - 1) * query.limit,
         where: {
@@ -99,10 +103,10 @@ describe('TaskController', () => {
     it('should return 503 if query fails', async () => {
       const query = { page: 1, limit: 10 };
 
-      (TaskService as jest.Mocked<typeof TaskService>).findAll.mockRejectedValue(new Error());
-      await TaskController.findAll({ query } as any, res as any);
+      (taskService as jest.Mocked<typeof taskService>).findAll.mockRejectedValue(new Error());
+      await taskController.findAll({ query } as any, res as any);
 
-      expect(TaskService.findAll).toBeCalledWith({
+      expect(taskService.findAll).toBeCalledWith({
         take: query.limit,
         skip: (query.page - 1) * query.limit,
         where: expect.anything(),
@@ -118,20 +122,20 @@ describe('TaskController', () => {
       const params = { id: '1' };
       const task = { title: 'test' };
 
-      (TaskService as jest.Mocked<typeof TaskService>).findById.mockResolvedValue(task as any);
-      await TaskController.findById({ params } as any, res as any);
+      (taskService as jest.Mocked<typeof taskService>).findById.mockResolvedValue(task as any);
+      await taskController.findById({ params } as any, res as any);
 
-      expect(TaskService.findById).toBeCalledWith(parseInt(params.id, 10));
+      expect(taskService.findById).toBeCalledWith(parseInt(params.id, 10));
       expect(res.json).toBeCalledWith(task);
     });
 
     it('should return 404 if task is not found', async () => {
       const params = { id: '1' };
 
-      (TaskService as jest.Mocked<typeof TaskService>).findById.mockResolvedValue(undefined);
-      await TaskController.findById({ params } as any, res as any);
+      (taskService as jest.Mocked<typeof taskService>).findById.mockResolvedValue(undefined);
+      await taskController.findById({ params } as any, res as any);
 
-      expect(TaskService.findById).toBeCalledWith(parseInt(params.id, 10));
+      expect(taskService.findById).toBeCalledWith(parseInt(params.id, 10));
       expect(res.status).toBeCalledWith(404);
       expect(res.json).toBeCalledWith({ message: expect.anything() });
     });
@@ -139,10 +143,10 @@ describe('TaskController', () => {
     it('should return 503 if query fails', async () => {
       const params = { id: '1' };
 
-      (TaskService as jest.Mocked<typeof TaskService>).findById.mockRejectedValue(new Error());
-      await TaskController.findById({ params } as any, res as any);
+      (taskService as jest.Mocked<typeof taskService>).findById.mockRejectedValue(new Error());
+      await taskController.findById({ params } as any, res as any);
 
-      expect(TaskService.findById).toBeCalledWith(parseInt(params.id, 10));
+      expect(taskService.findById).toBeCalledWith(parseInt(params.id, 10));
       expect(res.status).toBeCalledWith(503);
       expect(res.json).toBeCalledWith({ message: expect.anything() });
     });
@@ -154,14 +158,14 @@ describe('TaskController', () => {
       const task = new Task();
       const now = new Date();
 
-      (TaskService as jest.Mocked<typeof TaskService>).create.mockReturnValue({
+      (taskService as jest.Mocked<typeof taskService>).create.mockReturnValue({
         id: 1, ...body, status: 'pending', createdAt: now, updatedAt: now,
       });
-      (TaskService as jest.Mocked<typeof TaskService>).save.mockResolvedValue(task);
-      await TaskController.store({ body } as any, res as any);
+      (taskService as jest.Mocked<typeof taskService>).save.mockResolvedValue(task);
+      await taskController.store({ body } as any, res as any);
 
-      expect(TaskService.create).toBeCalledWith(body);
-      expect(TaskService.save).toBeCalled();
+      expect(taskService.create).toBeCalledWith(body);
+      expect(taskService.save).toBeCalled();
       expect(res.status).toBeCalledWith(201);
       expect(res.json).toBeCalledWith({
         id: 1, title: 'test', description: 'test', status: 'pending', createdAt: now, updatedAt: now,
@@ -171,10 +175,10 @@ describe('TaskController', () => {
     it('should return 503 if query fails', async () => {
       const body = { title: 'test', description: 'test' };
 
-      (TaskService as jest.Mocked<typeof TaskService>).save.mockRejectedValue(new Error());
-      await TaskController.store({ body } as any, res as any);
+      (taskService as jest.Mocked<typeof taskService>).save.mockRejectedValue(new Error());
+      await taskController.store({ body } as any, res as any);
 
-      expect(TaskService.save).toBeCalled();
+      expect(taskService.save).toBeCalled();
       expect(res.status).toBeCalledWith(503);
       expect(res.json).toBeCalledWith({ message: expect.anything() });
     });
@@ -186,13 +190,13 @@ describe('TaskController', () => {
       const body = { title: 'test', description: 'test' };
       const task = new Task();
 
-      (TaskService as jest.Mocked<typeof TaskService>).findById.mockResolvedValue(task);
-      (TaskService as jest.Mocked<typeof TaskService>).save.mockResolvedValue(task);
-      await TaskController.replace({ params, body } as any, res as any);
+      (taskService as jest.Mocked<typeof taskService>).findById.mockResolvedValue(task);
+      (taskService as jest.Mocked<typeof taskService>).save.mockResolvedValue(task);
+      await taskController.replace({ params, body } as any, res as any);
 
       expect(task.title).toStrictEqual('test');
       expect(task.description).toStrictEqual('test');
-      expect(TaskService.save).toBeCalledWith(task);
+      expect(taskService.save).toBeCalledWith(task);
       expect(res.json).toBeCalledWith(task);
     });
 
@@ -200,10 +204,10 @@ describe('TaskController', () => {
       const params = { id: '1' };
       const body = { title: 'test', description: 'test' };
 
-      (TaskService as jest.Mocked<typeof TaskService>).findById.mockResolvedValue(undefined);
-      await TaskController.replace({ params, body } as any, res as any);
+      (taskService as jest.Mocked<typeof taskService>).findById.mockResolvedValue(undefined);
+      await taskController.replace({ params, body } as any, res as any);
 
-      expect(TaskService.save).not.toBeCalled();
+      expect(taskService.save).not.toBeCalled();
       expect(res.status).toBeCalledWith(404);
       expect(res.json).toBeCalledWith({ message: expect.anything() });
     });
@@ -212,10 +216,10 @@ describe('TaskController', () => {
       const params = { id: '1' };
       const body = { title: 'test', description: 'test' };
 
-      (TaskService as jest.Mocked<typeof TaskService>).findById.mockRejectedValue(new Error());
-      await TaskController.replace({ params, body } as any, res as any);
+      (taskService as jest.Mocked<typeof taskService>).findById.mockRejectedValue(new Error());
+      await taskController.replace({ params, body } as any, res as any);
 
-      expect(TaskService.save).not.toBeCalled();
+      expect(taskService.save).not.toBeCalled();
       expect(res.status).toBeCalledWith(503);
       expect(res.json).toBeCalledWith({ message: expect.anything() });
     });
@@ -227,14 +231,14 @@ describe('TaskController', () => {
       const body = { title: 'test', description: 'test', status: 'done' };
       const task = new Task();
 
-      (TaskService as jest.Mocked<typeof TaskService>).findById.mockResolvedValue(task);
-      (TaskService as jest.Mocked<typeof TaskService>).save.mockResolvedValue(task);
-      await TaskController.update({ params, body } as any, res as any);
+      (taskService as jest.Mocked<typeof taskService>).findById.mockResolvedValue(task);
+      (taskService as jest.Mocked<typeof taskService>).save.mockResolvedValue(task);
+      await taskController.update({ params, body } as any, res as any);
 
       expect(task.title).toStrictEqual('test');
       expect(task.description).toStrictEqual('test');
       expect(task.status).toStrictEqual('done');
-      expect(TaskService.save).toBeCalledWith(task);
+      expect(taskService.save).toBeCalledWith(task);
       expect(res.json).toBeCalledWith(task);
     });
 
@@ -247,14 +251,14 @@ describe('TaskController', () => {
       task.description = 'test';
       task.status = 'done';
 
-      (TaskService as jest.Mocked<typeof TaskService>).findById.mockResolvedValue(task);
-      (TaskService as jest.Mocked<typeof TaskService>).save.mockResolvedValue(task);
-      await TaskController.update({ params, body } as any, res as any);
+      (taskService as jest.Mocked<typeof taskService>).findById.mockResolvedValue(task);
+      (taskService as jest.Mocked<typeof taskService>).save.mockResolvedValue(task);
+      await taskController.update({ params, body } as any, res as any);
 
       expect(task.title).toStrictEqual('test');
       expect(task.description).toStrictEqual('test');
       expect(task.status).toStrictEqual('done');
-      expect(TaskService.save).toBeCalledWith(task);
+      expect(taskService.save).toBeCalledWith(task);
       expect(res.json).toBeCalledWith(task);
     });
 
@@ -262,10 +266,10 @@ describe('TaskController', () => {
       const params = { id: '1' };
       const body = { title: 'test', description: 'test' };
 
-      (TaskService as jest.Mocked<typeof TaskService>).findById.mockResolvedValue(undefined);
-      await TaskController.update({ params, body } as any, res as any);
+      (taskService as jest.Mocked<typeof taskService>).findById.mockResolvedValue(undefined);
+      await taskController.update({ params, body } as any, res as any);
 
-      expect(TaskService.save).not.toBeCalled();
+      expect(taskService.save).not.toBeCalled();
       expect(res.status).toBeCalledWith(404);
       expect(res.json).toBeCalledWith({ message: expect.anything() });
     });
@@ -274,10 +278,10 @@ describe('TaskController', () => {
       const params = { id: '1' };
       const body = { title: 'test', description: 'test' };
 
-      (TaskService as jest.Mocked<typeof TaskService>).findById.mockRejectedValue(new Error());
-      await TaskController.update({ params, body } as any, res as any);
+      (taskService as jest.Mocked<typeof taskService>).findById.mockRejectedValue(new Error());
+      await taskController.update({ params, body } as any, res as any);
 
-      expect(TaskService.save).not.toBeCalled();
+      expect(taskService.save).not.toBeCalled();
       expect(res.status).toBeCalledWith(503);
       expect(res.json).toBeCalledWith({ message: expect.anything() });
     });

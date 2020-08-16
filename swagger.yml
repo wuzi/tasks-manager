@@ -3,7 +3,6 @@ info:
   description: This is the official documentation for the tasks manager API.
   version: 0.1.0
   title: Tasks Manager API
-basePath: /v1
 host: localhost
 tags:
   - name: health

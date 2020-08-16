@@ -1,9 +1,10 @@
 import * as typeorm from 'typeorm';
-import HealthController from './health.controller';
+import { HealthController } from './health.controller';
 
 jest.mock('express');
 jest.mock('typeorm');
 
+const healthController = new HealthController();
 const res = {
   status: jest.fn().mockReturnThis(),
   json: jest.fn().mockReturnThis(),
@@ -25,7 +26,7 @@ describe('HealthController', () => {
           },
         },
       });
-      HealthController.check({} as any, res as any);
+      healthController.check({} as any, res as any);
       expect(res.status).toBeCalledWith(200);
       expect(res.json).toBeCalledWith({ message: expect.anything() });
     });
@@ -38,7 +39,7 @@ describe('HealthController', () => {
           },
         },
       });
-      HealthController.check({} as any, res as any);
+      healthController.check({} as any, res as any);
       expect(res.status).toBeCalledWith(503);
       expect(res.json).toBeCalledWith({ message: expect.anything() });
     });

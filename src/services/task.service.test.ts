@@ -1,6 +1,10 @@
+import 'reflect-metadata';
+import { container } from 'tsyringe';
 import * as typeorm from 'typeorm';
 import TaskService from './task.service';
 import Task from '../models/task.model';
+
+const taskService = container.resolve(TaskService);
 
 describe('TaskService', () => {
   describe('findAll', () => {
@@ -10,7 +14,7 @@ describe('TaskService', () => {
           findAndCount: jest.fn().mockReturnValue([[], 0]),
         }),
       });
-      const [tasks, total] = await TaskService.findAll();
+      const [tasks, total] = await taskService.findAll();
       expect(Array.isArray(tasks)).toBe(true);
       expect(typeof total === 'number').toBe(true);
     });
@@ -24,7 +28,7 @@ describe('TaskService', () => {
           findOne: jest.fn().mockReturnValue(task),
         }),
       });
-      const foundTask = await TaskService.findById(1);
+      const foundTask = await taskService.findById(1);
       expect(foundTask).toStrictEqual(task);
     });
   });
@@ -39,7 +43,7 @@ describe('TaskService', () => {
           create: jest.fn().mockReturnValue({ id: 1, ...task }),
         }),
       });
-      const newTask = TaskService.create(task as Task);
+      const newTask = taskService.create(task as Task);
       expect(newTask).toHaveProperty('id');
       expect(newTask.title).toStrictEqual('test');
       expect(newTask.description).toStrictEqual('test');
@@ -55,7 +59,7 @@ describe('TaskService', () => {
           create: jest.fn().mockReturnValue({ id: 1, ...task, status: 'pending' }),
         }),
       });
-      const newTask = TaskService.create(task);
+      const newTask = taskService.create(task);
       expect(newTask).toHaveProperty('id');
       expect(newTask).toHaveProperty('title');
       expect(newTask).toHaveProperty('description');
@@ -72,7 +76,7 @@ describe('TaskService', () => {
           save: jest.fn().mockReturnValue(task),
         }),
       });
-      const savedTask = await TaskService.save(task);
+      const savedTask = await taskService.save(task);
       expect(savedTask).toStrictEqual(task);
     });
   });

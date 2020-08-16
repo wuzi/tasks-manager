@@ -1,18 +1,29 @@
 import 'dotenv/config';
 import 'reflect-metadata';
-import express from 'express';
-import cors from 'cors';
+import { Server } from '@overnightjs/core';
 import bodyParser from 'body-parser';
+import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
-import routes from './routes';
 import swaggerOptions from './config/swagger';
+import controllers from './controllers';
+import logger from './utils/logger';
 
-const app = express();
+export class App extends Server {
+  constructor() {
+    super(process.env.NODE_ENV === 'development');
+    this.app.use(cors());
+    this.app.use(bodyParser.json());
+    this.app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerOptions));
+    this.setupControllers();
+  }
 
-app.set('port', process.env.PORT || 3000);
-app.use(cors());
-app.use(bodyParser.json());
-app.use('/v1', routes);
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerOptions));
+  private setupControllers(): void {
+    super.addControllers(controllers);
+  }
 
-export default app;
+  public start(port: number): void {
+    this.app.listen(port, () => {
+      logger('database', `App is running at http://localhost:${port}`, 'info');
+    });
+  }
+}
